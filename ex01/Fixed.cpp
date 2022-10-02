@@ -1,6 +1,8 @@
 #include "Fixed.hpp"
 
-Fixed::Fixed(void) :
+const int	Fixed::_bits = 8;
+
+Fixed::Fixed(void):
 	_fixed(0)
 {
 	std::cout << "Default constructor called" << std::endl;
@@ -14,9 +16,18 @@ Fixed::Fixed(const Fixed &src)
 	return ;
 }
 
-Fixed::Fixed(const int i)
+Fixed::Fixed(const int i):
+	_fixed(i * (1 << Fixed::_bits))
 {
+	std::cout << "Int constructor called" << std::endl;
+	return ;
+}
 
+Fixed::Fixed(const float f):
+	_fixed((int)roundf(f * (1 << Fixed::_bits)))
+{
+	std::cout << "Float constructor called" << std::endl;
+	return ;
 }
 
 Fixed::~Fixed(void)
@@ -34,7 +45,6 @@ Fixed	&Fixed::operator=(const Fixed &rhs)
 
 int	Fixed::getRawBits(void) const
 {
-	std::cout << "getRawBits member function called" << std::endl;
 	return (this->_fixed);
 }
 
@@ -42,4 +52,19 @@ void	Fixed::setRawBits(const int raw)
 {
 	this->_fixed = raw;
 	return ;
+}
+
+float	Fixed::toFloat(void) const
+{
+	return ((float)this->_fixed / (1 << Fixed::_bits));
+}
+
+int	Fixed::toInt(void) const
+{
+	return (this->_fixed / (1 << Fixed::_bits));
+}
+
+std::ostream	&operator<<(std::ostream &o, const Fixed &rhs)
+{
+	return (o << rhs.toFloat());
 }
